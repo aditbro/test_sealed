@@ -1,2 +1,3 @@
 [report]
 include = app/*
+omit = app/tests/*

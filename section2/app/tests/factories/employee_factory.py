@@ -1,5 +1,5 @@
 import factory
-from app.db import session
+from app.tests import session
 from app.models import EmployeeDB
 from uuid import uuid4
 
