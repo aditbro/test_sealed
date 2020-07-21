@@ -55,17 +55,11 @@ async def employee_get(offset: int = 0, limit: int = 0, sort: str = None) -> Emp
     status_code=200
 )
 async def employee_put(id: str, employee: Employee) -> Any:
-    # since the spec requires that ANY of employee fields can be changed
-    # which means the ID can be changed too, so the old employee needs
-    # to be deleted
     curr_empl = session.query(EmployeeDB) \
         .filter(EmployeeDB.id == id) \
         .one()
-    session.delete(curr_empl)
-    session.commit()
-
-    new_empl = EmployeeDB(**employee.dict())
-    session.add(new_empl)
+    for key, value in employee.dict().items():
+        setattr(curr_empl, key, value)
     session.commit()
 
     return ({'message': 'success'})
