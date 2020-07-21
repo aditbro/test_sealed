@@ -1,4 +1,4 @@
-from app.schemas import NewEmployees, Employee
+from app.schemas import Employees, Employee
 from app.models import EmployeeDB
 from app.db import session
 from app.controllers.v1 import responses
@@ -14,7 +14,7 @@ employee_router = APIRouter()
     summary='create new employees',
     status_code=200
 )
-async def employee_post(employees: NewEmployees) -> Any:
+async def employee_post(employees: Employees) -> Any:
     employees = list(
         map(lambda x: EmployeeDB(**x.dict()), employees.employees)
     )
@@ -25,11 +25,27 @@ async def employee_post(employees: NewEmployees) -> Any:
     return ({'message': 'success'})
 
 
-# @employee_router.get(
-#     '/',
-#     responses=responses.responses,
+@employee_router.get(
+    '/',
+    responses=responses.responses,
+    status_code=200
+)
+async def employee_get(offset: int = 0, limit: int = 0, sort: str = None) -> Employees:
+    sort_field = sort[1:]
+    sort_dir = sort[0]
+    sort_obj = getattr(EmployeeDB, sort_field)
 
-# )
+    if sort_dir == '-':
+        sort_obj = sort_obj.desc()
+
+    employees = session.query(EmployeeDB) \
+                       .order_by(sort_obj) \
+                       .offset(offset) \
+                       .limit(limit) \
+                       .all()
+
+    employees = Employees(**{'employees': employees})
+    return employees
 
 
 @employee_router.put(

@@ -1,3 +1,4 @@
+import json
 import random
 from app.models import EmployeeDB
 from app.schemas import Employee
@@ -95,3 +96,57 @@ with description('PUT /v1/employee/{id}'):
             new_employee = session.query(EmployeeDB).get(self.employee.id)
             new_employee = Employee.from_orm(self.employee)
             expect(old_employee.dict()).to(equal(new_employee.dict()))
+
+with description('GET /v1/employee/'):
+    with context('given valid limit, offset, and sort') as self:
+        with before.each:
+            self.offset = random.randint(1, 10)
+            self.limit = random.randint(1, 10)
+            self.sort = random.choice(['+', '-'])
+            self.sort += random.choice(['name', 'login', 'id'])
+
+            n_employee = random.randint(10, 40)
+            self.employees = EmployeeFactory.create_batch(n_employee)
+
+        with after.each:
+            clear_db()
+
+        with it('returns employees data as parameter requested'):
+            url = '/v1/employee/?offset={}&limit={}&sort={}'
+            url = url.format(self.offset, self.limit, self.sort)
+
+            response = client.get(url)
+            expect(response.status_code).to(equal(200))
+
+            resp_data = json.loads(response.text)['employees']
+            employees = list(map(lambda x: Employee.from_orm(x), self.employees))
+            employees = list(map(lambda x: x.dict(), employees))
+
+            sort_key = self.sort[1:]
+            reverse_sort = self.sort[0] == '-'
+            employees.sort(key=lambda x: x[sort_key], reverse=reverse_sort)
+            start = self.offset
+            end = self.offset + self.limit
+            employees = employees[start:end]
+
+            expect(employees).to(equal(resp_data))
+
+    with context('given invalid sort params') as self:
+        with before.each:
+            self.offset = random.randint(1, 10)
+            self.limit = random.randint(1, 10)
+            self.sort = random.choice(['+', '-'])
+            self.sort += 'test'
+
+            n_employee = random.randint(10, 40)
+            self.employees = EmployeeFactory.create_batch(n_employee)
+
+        with after.each:
+            clear_db()
+
+        with it('returns empty body with status code 400'):
+            url = '/v1/employee/?offset={}&limit={}&sort={}'
+            url = url.format(self.offset, self.limit, self.sort)
+
+            response = client.get(url)
+            expect(response.status_code).to(equal(400))

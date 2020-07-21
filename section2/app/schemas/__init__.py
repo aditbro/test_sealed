@@ -1,1 +1,1 @@
-from .employee import Employee, NewEmployees
+from .employee import Employee, Employees

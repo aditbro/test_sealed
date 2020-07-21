@@ -20,7 +20,16 @@ async def handle_409(req: Request, exc: IntegrityError):
         content={'message': 'duplicate data'}
     )
 
+
+async def handle_400(req: Request, exc: AttributeError):
+    session.rollback()
+    return JSONResponse(
+        status_code=400,
+        content={'message': 'bad request parameters'}
+    )
+
 exception_handlers = {
     NoResultFound: handle_404,
-    IntegrityError: handle_409
+    IntegrityError: handle_409,
+    AttributeError: handle_400
 }
