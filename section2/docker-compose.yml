@@ -5,6 +5,6 @@ services:
     environment: 
       - POSTGRES_PASSWORD=test
       - POSTGRES_USER=test
-      - POSTGRES_DB=prosa-api-dev-db
+      - POSTGRES_DB=api-dev-db
     ports:
       - 5432:5432

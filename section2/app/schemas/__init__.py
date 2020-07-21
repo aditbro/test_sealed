@@ -1,1 +1,1 @@
-from .user import BaseUser, UserInDB, UserNew, UserGet
+from .employee import Employee, NewEmployees
