@@ -53,3 +53,45 @@ with description('POST /v1/employee'):
 
             employees = session.query(EmployeeDB).all()
             expect(employees).to(be_empty)
+
+
+with description('PUT /v1/employee/{id}'):
+    with context('given valid id and employees attributes') as self:
+        with before.each:
+            self.employee = EmployeeFactory.create()
+            self.empl_update = EmployeeFactory.build()
+            self.empl_update = Employee.from_orm(self.empl_update)
+
+        with after.each:
+            clear_db()
+
+        with it('updates the current employee data'):
+            data = self.empl_update.dict()
+            response = client.put('/v1/employee/{}'.format(self.employee.id),
+                                  json=data)
+            expect(response.status_code).to(equal(200))
+
+            employee = session.query(EmployeeDB).get(self.empl_update.id)
+            employee = Employee.from_orm(employee)
+            expect(employee.dict()).to(equal(self.empl_update.dict()))
+
+    with context('employee id is invalid') as self:
+        with before.each:
+            self.employee = EmployeeFactory.create()
+            self.empl_update = EmployeeFactory.build()
+            self.empl_update = Employee.from_orm(self.empl_update)
+
+        with after.each:
+            clear_db()
+
+        with it('do nothing and returns 404'):
+            fault_id = self.employee.id + 'asdsad'
+            data = self.empl_update.dict()
+            response = client.put('/v1/employee/{}'.format(fault_id),
+                                  json=data)
+            expect(response.status_code).to(equal(404))
+
+            old_employee = Employee.from_orm(self.employee)
+            new_employee = session.query(EmployeeDB).get(self.employee.id)
+            new_employee = Employee.from_orm(self.employee)
+            expect(old_employee.dict()).to(equal(new_employee.dict()))

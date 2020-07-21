@@ -11,5 +11,6 @@ class Employee(BaseModel):
     class Config:
         orm_mode = True
 
+
 class NewEmployees(BaseModel):
     employees: List[Employee]

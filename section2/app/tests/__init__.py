@@ -1,5 +1,5 @@
 from app.main import app
-from .db import session
+from app.db import session
 from fastapi.testclient import TestClient
 from sqlalchemy import MetaData
 
