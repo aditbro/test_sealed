@@ -25,6 +25,13 @@ async def employee_post(employees: NewEmployees) -> Any:
     return ({'message': 'success'})
 
 
+# @employee_router.get(
+#     '/',
+#     responses=responses.responses,
+
+# )
+
+
 @employee_router.put(
     '/{id}',
     responses=responses.responses,
@@ -32,7 +39,7 @@ async def employee_post(employees: NewEmployees) -> Any:
     status_code=200
 )
 async def employee_put(id: str, employee: Employee) -> Any:
-    # since the spec requires that ANY of employee data can be changed
+    # since the spec requires that ANY of employee fields can be changed
     # which means the ID can be changed too, so the old employee needs
     # to be deleted
     curr_empl = session.query(EmployeeDB) \
@@ -44,3 +51,5 @@ async def employee_put(id: str, employee: Employee) -> Any:
     new_empl = EmployeeDB(**employee.dict())
     session.add(new_empl)
     session.commit()
+
+    return ({'message': 'success'})

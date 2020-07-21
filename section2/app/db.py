@@ -15,6 +15,6 @@ db_config = dict(
 db_uri = "{db_type}://{user}:{password}@{host}:{port}/{db_name}"
 db_uri = db_uri.format(**db_config)
 
-engine = create_engine(db_uri, pool_pre_ping=True)
+engine = create_engine(db_uri, pool_pre_ping=True, encoding='utf8')
 SessionLocal = sessionmaker(bind=engine)
 session = SessionLocal()
