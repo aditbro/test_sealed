@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "fastapi_test"
+version = "0.1.0"
+description = ""
+authors = ["aditbro <adityafarizki@live.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.59.0"
+pyyaml = "^5.3.1"
+psycopg2 = "^2.8.5"
+requests = "^2.24.0"
+python-multipart = "^0.0.5"
+sqlalchemy = "^1.3.18"
+alembic = "^1.4.2"
+uvicorn = "^0.11.6"
+
+[tool.poetry.dev-dependencies]
+mamba = "^0.11.0"
+flake8 = "^3.8.3"
+coverage = "^5.2"
+factory_boy = "^2.12.0"
+mockito = "^1.2.1"
+expects = "^0.9.0"
+faker = "^4.1.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
