@@ -30,7 +30,7 @@ async def employee_post(employees: Employees) -> Any:
     responses=responses.responses,
     status_code=200
 )
-async def employee_get(offset: int = 0, limit: int = 0, sort: str = None) -> Employees:
+async def employee_get(offset: int = 0, limit: int = 10, sort: str = '+id') -> Employees:
     sort_field = sort[1:]
     sort_dir = sort[0]
     sort_obj = getattr(EmployeeDB, sort_field)
