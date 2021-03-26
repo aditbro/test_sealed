@@ -7,7 +7,7 @@ authors = ["aditbro <adityafarizki@live.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "^0.59.0"
-pyyaml = "^5.3.1"
+pyyaml = "^5.4"
 psycopg2 = "^2.8.5"
 requests = "^2.24.0"
 python-multipart = "^0.0.5"
